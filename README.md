@@ -89,9 +89,10 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 
 ### 3. 操作users表的CRUD ###
 
-3.1. XML的实现
+#### 3.1. XML的实现 ####
 
 1). 定义sql映射xml文件：
+
 	<insert id="insertUser" parameterType="com.atguigu.ibatis.bean.User">
 		insert into users(name, age) values(#{name}, #{age});
 	</insert>
@@ -114,6 +115,7 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 
 2). 在config.xml中注册这个映射文件
 	<mapper resource=" com/atguigu/ibatis/bean/userMapper.xml"/>
+
 3). 在dao中调用：
 	public User getUserById(int id) {
 		SqlSession session = sessionFactory.openSession();
