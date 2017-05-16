@@ -117,13 +117,14 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	<mapper resource=" com/atguigu/ibatis/bean/userMapper.xml"/>
 
 3). 在dao中调用：
+
 	public User getUserById(int id) {
 		SqlSession session = sessionFactory.openSession();
 		User user = session.selectOne(URI+".selectUser", id);
 		return user;
 	}
 
-3.2. 注解的实现
+#### 3.2. 注解的实现 ####
 
 1). 定义sql映射的接口
 		
@@ -158,7 +159,7 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 
 ### 4. 几个可以优化的地方 ###
 
-4.1. 连接数据库的配置单独放在一个properties文件中
+#### 4.1. 连接数据库的配置单独放在一个properties文件中 ####
 ### db.properties
 
 	<properties resource="db.properties"/>
@@ -167,12 +168,13 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	<property name="url" value="${url}" />
 	<property name="username" value="${username}" />
 	<property name="password" value="${password}" />
-4.2. 为实体类定义别名,简化sql映射xml文件中的引用
+
+#### 4.2. 为实体类定义别名,简化sql映射xml文件中的引用 ####
 	<typeAliases>
 		<typeAlias type="com.atguigu.ibatis.bean.User" alias="_User"/>
 	</typeAliases>
 
-4.3. 可以在src下加入log4j的配置文件,打印日志信息
+#### 4.3. 可以在src下加入log4j的配置文件,打印日志信息 ####
 1. 添加jar: 
 	log4j-1.2.16.jar
 
@@ -215,7 +217,7 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 
 ### 5. 解决字段名与实体类属性名不相同的冲突 ###
 
-5.1. 准备表和数据：
+#### 5.1. 准备表和数据： ####
 
 	CREATE TABLE orders(
 		order_id INT PRIMARY KEY AUTO_INCREMENT,
@@ -225,13 +227,15 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	INSERT INTO orders(order_no, order_price) VALUES('aaaa', 23);
 	INSERT INTO orders(order_no, order_price) VALUES('bbbb', 33);
 	INSERT INTO orders(order_no, order_price) VALUES('cccc', 22);
-5.2. 定义实体类：
+
+#### 5.2. 定义实体类： ####
 	public class Order {
 		private int id;
 		private String orderNo;
 		private float price;
 	}
-5.3. 实现getOrderById(id)的查询：
+
+#### 5.3. 实现getOrderById(id)的查询： ####
 
 方式一: 通过在sql语句中定义别名
 	<select id="selectOrder" parameterType="int" resultType="_Order">
@@ -250,9 +254,11 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	</resultMap>
 
 ### 6.实现关联表查询 ###
-6.1. 一对一关联
+
+#### 6.1. 一对一关联 ####
 1). 提出需求
 根据班级id查询班级信息(带老师的信息)
+
 2). 创建表和数据
 	CREATE TABLE teacher(
 		t_id INT PRIMARY KEY AUTO_INCREMENT, 
@@ -270,6 +276,7 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	
 	INSERT INTO class(c_name, teacher_id) VALUES('bj_a', 1);
 	INSERT INTO class(c_name, teacher_id) VALUES('bj_b', 2);
+
 3). 定义实体类：
 	public class Teacher {
 		private int id;
@@ -334,9 +341,10 @@ SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id�
 		System.out.println(c);
 	}
 
-6.2. 一对多关联
+#### 6.2. 一对多关联 ####
 1). 提出需求
 根据classId查询对应的班级信息,包括学生,老师
+
 2). 创建表和数据：
 	CREATE TABLE student(
 		s_id INT PRIMARY KEY AUTO_INCREMENT, 
@@ -363,6 +371,7 @@ SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id�
 		private Teacher teacher;
 		private List<Student> students;
 	}
+
 4). 定义sql映射文件ClassMapper.xml
 <!-- 
 方式一: 嵌套结果: 使用嵌套结果映射来处理重复的联合结果的子集
@@ -428,11 +437,11 @@ SELECT * FROM student WHERE class_id=1  //1是第一个查询得到的c_id字段
 
 
 ### 7. 动态SQL与模糊查询 ###
-7.1. 提出需求: 
+#### 7.1. 提出需求: #### 
 
 实现多条件查询用户(姓名模糊匹配, 年龄在指定的最小值到最大值之间)
 
-7.2. 准备数据表和数据:  
+#### 7.2. 准备数据表和数据:   ####
 	create table d_user(  
 		id int primary key auto_increment,  
 		name varchar(10),
@@ -443,17 +452,17 @@ SELECT * FROM student WHERE class_id=1  //1是第一个查询得到的c_id字段
 	insert into d_user(name,age) values('Bob',13);  
 	insert into d_user(name,age) values('Jack',18);
 
-7.3. ConditionUser(查询条件实体类)
+#### 7.3. ConditionUser(查询条件实体类) ####
 	private String name;
 	private int minAge;
 	private int maxAge;
 
-7.4. User(表实体类)
+#### 7.4. User(表实体类) ####
 	private int id;
 	private String name;
 	private int age;
 
-7.5. userMapper.xml(映射文件)
+#### 7.5. userMapper.xml(映射文件) ####
 	<?xml version="1.0" encoding="UTF-8" ?> 
 	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -464,7 +473,7 @@ SELECT * FROM student WHERE class_id=1  //1是第一个查询得到的c_id字段
 		</select>
 	</mapper>
 
-7.6. UserTest(测试)
+#### 7.6. UserTest(测试) ####
 	public class UserTest {
 	
 		public static void main(String[] args) throws IOException {
@@ -487,9 +496,11 @@ MyBatis中可用的动态SQL标签
 
 
 ### 8.调用存储过程 ###
-8.1. 提出需求:
+
+#### 8.1. 提出需求: ####
 	查询得到男性或女性的数量, 如果传入的是0就女性否则是男性
-8.2. 准备数据库表和存储过程:
+
+#### 8.2. 准备数据库表和存储过程: ####
 	create table p_user(  
 		id int primary key auto_increment,  
 		name varchar(10),
@@ -517,14 +528,15 @@ MyBatis中可用的动态SQL标签
 	SET @user_count = 0;
 	CALL mybatis.ges_user_count(1, @user_count);
 	SELECT @user_count;
-8.3. 创建表的实体类
+
+#### 8.3. 创建表的实体类 ####
 	public class User {
 		private String id;
 		private String name;
 		private String sex;
 	}
 
-8.4. userMapper.xml
+#### 8.4. userMapper.xml ####
 	<mapper namespace="com.atguigu.mybatis.test7.userMapper">
 		<!-- 
 			查询得到男性或女性的数量, 如果传入的是0就女性否则是男性
@@ -539,7 +551,7 @@ MyBatis中可用的动态SQL标签
 		 </parameterMap>
 	</mapper>
 
-8.5. 测试调用:
+#### 8.5. 测试调用: ####
 	Map<String, Integer> paramMap = new HashMap<>();
 	paramMap.put("sex_id", 0);
 	
@@ -550,7 +562,9 @@ MyBatis中可用的动态SQL标签
 
 
 ### 9. Mybatis缓存 ###
-9.1. 理解MyBatis缓存
+
+#### 9.1. 理解MyBatis缓存 ####
+
 正如大多数持久层框架一样，MyBatis 同样提供了一级缓存和二级缓存的支持
 1.一级缓存: 基于PerpetualCache 的 HashMap本地缓存，其存储作用域为 Session，当 Session flush 
 或 close 之后，该Session中的所有 Cache 就将清空。
@@ -559,9 +573,10 @@ MyBatis中可用的动态SQL标签
 3. 对于缓存数据更新机制，当某一个作用域(一级缓存Session/二级缓存Namespaces)的进行了 C/U/D 操作后，
 默认该作用域下所有 select 中的缓存将被clear。
 
-9.2. Mybatis一级缓存
+#### 9.2. Mybatis一级缓存 ####
 1) 提出需求:
 	根据id查询对应的用户记录对象
+
 2). 准备数据库表和数据
 	CREATE TABLE c_user(
 		id INT PRIMARY KEY AUTO_INCREMENT, 
@@ -570,6 +585,7 @@ MyBatis中可用的动态SQL标签
 	);
 	INSERT INTO c_user(NAME, age) VALUES('Tom', 12);
 	INSERT INTO c_user(NAME, age) VALUES('Jack', 11);
+
 3). 创建表的实体类
 	public class User implements Serializable{
 	
@@ -577,6 +593,7 @@ MyBatis中可用的动态SQL标签
 		private String name;
 		private int age;
 	}
+
 4). userMapper.xml
 	<?xml version="1.0" encoding="UTF-8" ?>
 	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -591,6 +608,7 @@ MyBatis中可用的动态SQL标签
 			name=#{name}, age=#{age} where id=#{id}
 		</update>
 	</mapper>
+
 5). 测试:
 
 /*
@@ -648,10 +666,11 @@ MyBatis中可用的动态SQL标签
 		*/
 	}
 
-9.3. Mybatis二级缓存
+#### 9.3. Mybatis二级缓存 ####
 1). 添加一个<cache>在userMapper.xml中
 	<mapper namespace="com.atguigu.mybatis.test8.userMapper">
 		<cache/>
+
 2). 测试
 	/*
 	 * 测试二级缓存
@@ -670,6 +689,7 @@ MyBatis中可用的动态SQL标签
 		session.commit();
 		System.out.println("user2="+user);
 	}
+
 3). 补充说明
 1. 映射语句文件中的所有select语句将会被缓存。 
 2. 映射语句文件中的所有insert，update和delete语句会刷新缓存。 
@@ -684,11 +704,13 @@ MyBatis中可用的动态SQL标签
 	readOnly="true"/> //只读
 
 ### 10. spring集成mybatis ###
-10.1. 添加Jar包
+
+#### 10.1. 添加Jar包 ####
 【mybatis】
 		mybatis-3.2.0.jar
 		mybatis-spring-1.1.1.jar
 		log4j-1.2.17.jar
+
 【spring】
 		spring-aop-3.2.0.RELEASE.jar
 		spring-beans-3.2.0.RELEASE.jar
@@ -702,10 +724,11 @@ MyBatis中可用的动态SQL标签
 		aopalliance-1.0.jar
 		cglib-nodep-2.2.3.jar
 		commons-logging-1.1.1.jar
+
 【MYSQL驱动包】
 		mysql-connector-java-5.0.4-bin.jar
 
-10.2. 数据库表
+#### 10.2. 数据库表 ####
 	CREATE TABLE s_user(
 		user_id INT AUTO_INCREMENT PRIMARY KEY,
 		user_name VARCHAR(30),
@@ -713,7 +736,7 @@ MyBatis中可用的动态SQL标签
 		user_salary DOUBLE
 	)
 
-10.3. 实体类: User
+#### 10.3. 实体类: User ####
 	public class User {
 	
 		private int id;
@@ -724,7 +747,7 @@ MyBatis中可用的动态SQL标签
 	    //set,get方法
 	}
 
-10.4. DAO接口: UserMapper (XXXMapper)
+#### 10.4. DAO接口: UserMapper (XXXMapper) ####
 	public interface UserMapper {
 	
 		void save(User user);
@@ -734,7 +757,7 @@ MyBatis中可用的动态SQL标签
 		List<User> findAll();
 	}
 
-10.5. SQL映射文件: userMapper.xml(与接口忽略大小写同名)
+#### 10.5. SQL映射文件: userMapper.xml(与接口忽略大小写同名) ####
 	<?xml version="1.0" encoding="UTF-8"?>
 	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" 
 	"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
@@ -779,7 +802,7 @@ MyBatis中可用的动态SQL标签
 	</mapper>
 
 
-10.6. spring的配置文件: beans.xml
+#### 10.6. spring的配置文件: beans.xml ####
 	<?xml version="1.0" encoding="UTF-8"?>
 	<beans xmlns="http://www.springframework.org/schema/beans" 
 		xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
@@ -830,7 +853,7 @@ MyBatis中可用的动态SQL标签
 		
 	</beans>
 
-10.7. mybatis的配置文件: mybatis-config.xml
+#### 10.7. mybatis的配置文件: mybatis-config.xml ####
 	<?xml version="1.0" encoding="UTF-8" ?>
 	<!DOCTYPE configuration
 	  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
@@ -844,7 +867,7 @@ MyBatis中可用的动态SQL标签
 		<!-- 映射文件 -->	
 	</configuration>	
 
-10.8. 测试
+#### 10.8. 测试 ####
 	@RunWith(SpringJUnit4ClassRunner.class) //使用Springtest测试框架
 	@ContextConfiguration("/beans.xml") //加载配置
 	public class SMTest {
