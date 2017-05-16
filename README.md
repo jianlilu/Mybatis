@@ -114,7 +114,8 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	</select>
 
 2). 在config.xml中注册这个映射文件
-	<mapper resource=" com/atguigu/ibatis/bean/userMapper.xml"/>
+
+`<mapper resource=" com/atguigu/ibatis/bean/userMapper.xml"/>`
 
 3). 在dao中调用：
 
@@ -150,6 +151,7 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	<mapper class="com.atguigu.ibatis.crud.ano.UserMapper"/>
 
 3). 在dao类中调用
+
 	public User getUserById(int id) {
 		SqlSession session = sessionFactory.openSession();
 		UserMapper mapper = session.getMapper(UserMapper.class);
@@ -238,11 +240,13 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 #### 5.3. 实现getOrderById(id)的查询： ####
 
 方式一: 通过在sql语句中定义别名
+
 	<select id="selectOrder" parameterType="int" resultType="_Order">
 		select order_id id, order_no orderNo,order_price price from orders where order_id=#{id}
 	</select>
 		
 方式二: 通过<resultMap>
+
 	<select id="selectOrderResultMap" parameterType="int" resultMap="orderResultMap">
 		select * from orders where order_id=#{id}
 	</select>
@@ -260,6 +264,7 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 根据班级id查询班级信息(带老师的信息)
 
 2). 创建表和数据
+
 	CREATE TABLE teacher(
 		t_id INT PRIMARY KEY AUTO_INCREMENT, 
 		t_name VARCHAR(20)
@@ -278,6 +283,7 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	INSERT INTO class(c_name, teacher_id) VALUES('bj_b', 2);
 
 3). 定义实体类：
+
 	public class Teacher {
 		private int id;
 		private String name;
@@ -289,10 +295,14 @@ MyBatis是支持普通SQL查询，存储过程和高级映射的优秀持久层�
 	}
 
 4). 定义sql映射文件ClassMapper.xml
-<!-- 
+
+`<!-- `
+
 方式一：嵌套结果：使用嵌套结果映射来处理重复的联合结果的子集封装联表查询的数据(去除重复的数据)
 select * from class c, teacher t where c.teacher_id=t.t_id and  c.c_id=1
- -->
+
+ `-->`
+
 
 	<select id="getClass" parameterType="int" resultMap="ClassResultMap">
 		select * from class c, teacher t where c.teacher_id=t.t_id and  c.c_id=#{id}
@@ -306,11 +316,13 @@ select * from class c, teacher t where c.teacher_id=t.t_id and  c.c_id=1
 		</association>
 	</resultMap>
 
-<!-- 
+`<!-- `
+
 方式二：嵌套查询：通过执行另外一个SQL映射语句来返回预期的复杂类型
 SELECT * FROM class WHERE c_id=1;
 SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id的值
--->
+
+ `-->`
 
 	 <select id="getClass2" parameterType="int" resultMap="ClassResultMap2">
 		select * from class where c_id=#{id}
@@ -327,6 +339,7 @@ SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id�
 	 </select>
 
 5). 测试
+
 	@Test
 	public void testOO() {
 		SqlSession sqlSession = factory.openSession();
@@ -346,6 +359,7 @@ SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id�
 根据classId查询对应的班级信息,包括学生,老师
 
 2). 创建表和数据：
+
 	CREATE TABLE student(
 		s_id INT PRIMARY KEY AUTO_INCREMENT, 
 		s_name VARCHAR(20), 
@@ -360,6 +374,7 @@ SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id�
 
 
 3). 定义实体类：
+
 	public class Student {
 		private int id;
 		private String name;
@@ -373,10 +388,14 @@ SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id�
 	}
 
 4). 定义sql映射文件ClassMapper.xml
-<!-- 
+
+`<!-- `
+
 方式一: 嵌套结果: 使用嵌套结果映射来处理重复的联合结果的子集
 SELECT * FROM class c, teacher t,student s WHERE c.teacher_id=t.t_id AND c.C_id=s.class_id AND  c.c_id=1
- -->
+
+` -->`
+
 	<select id="getClass3" parameterType="int" resultMap="ClassResultMap3">
 		select * from class c, teacher t,student s where c.teacher_id=t.t_id and c.C_id=s.class_id and  c.c_id=#{id}
 	</select>
@@ -394,12 +413,14 @@ SELECT * FROM class c, teacher t,student s WHERE c.teacher_id=t.t_id AND c.C_id=
 		</collection>
 	</resultMap>
 
-<!-- 
+`<!-- `
+
 方式二：嵌套查询：通过执行另外一个SQL映射语句来返回预期的复杂类型
 SELECT * FROM class WHERE c_id=1;
 SELECT * FROM teacher WHERE t_id=1   //1 是上一个查询得到的teacher_id的值
 SELECT * FROM student WHERE class_id=1  //1是第一个查询得到的c_id字段的值
- -->
+
+ `-->`
 
 	 <select id="getClass4" parameterType="int" resultMap="ClassResultMap4">
 		select * from class where c_id=#{id}
@@ -420,6 +441,7 @@ SELECT * FROM student WHERE class_id=1  //1是第一个查询得到的c_id字段
 	 </select>
 
 5). 测试：
+
 	@Test
 	public void testOM() {
 		SqlSession sqlSession = factory.openSession();
@@ -436,8 +458,8 @@ SELECT * FROM student WHERE class_id=1  //1是第一个查询得到的c_id字段
 
 
 
-### 7. 动态SQL与模糊查询 ###
-#### 7.1. 提出需求: #### 
+### 7. 动态SQL与模糊查询
+#### 7.1. 提出需求: 
 
 实现多条件查询用户(姓名模糊匹配, 年龄在指定的最小值到最大值之间)
 
@@ -512,6 +534,7 @@ MyBatis中可用的动态SQL标签
 	insert into p_user(name,sex) values('C',"男");  
 
 创建存储过程(查询得到男性或女性的数量, 如果传入的是0就女性否则是男性)
+
 	DELIMITER $
 	CREATE PROCEDURE mybatis.ges_user_count(IN sex_id INT, OUT user_count INT)
 	BEGIN  
@@ -524,6 +547,7 @@ MyBatis中可用的动态SQL标签
 	$
 
 调用存储过程
+
 	DELIMITER ;
 	SET @user_count = 0;
 	CALL mybatis.ges_user_count(1, @user_count);
@@ -566,18 +590,20 @@ MyBatis中可用的动态SQL标签
 #### 9.1. 理解MyBatis缓存 ####
 
 正如大多数持久层框架一样，MyBatis 同样提供了一级缓存和二级缓存的支持
-1.一级缓存: 基于PerpetualCache 的 HashMap本地缓存，其存储作用域为 Session，当 Session flush 
+
+1. 一级缓存: 基于PerpetualCache 的 HashMap本地缓存，其存储作用域为 Session，当 Session flush 
 或 close 之后，该Session中的所有 Cache 就将清空。
-2. 二级缓存与一级缓存其机制相同，默认也是采用 PerpetualCache，HashMap存储，不同在于其存储作用域
-为 Mapper(Namespace)，并且可自定义存储源，如 Ehcache。
-3. 对于缓存数据更新机制，当某一个作用域(一级缓存Session/二级缓存Namespaces)的进行了 C/U/D 操作后，
-默认该作用域下所有 select 中的缓存将被clear。
+
+2. 二级缓存与一级缓存其机制相同，默认也是采用 PerpetualCache，HashMap存储，不同在于其存储作用域为 Mapper(Namespace)，并且可自定义存储源，如 Ehcache。
+
+3. 对于缓存数据更新机制，当某一个作用域(一级缓存Session/二级缓存Namespaces)的进行了 C/U/D 操作后，默认该作用域下所有 select 中的缓存将被clear。
 
 #### 9.2. Mybatis一级缓存 ####
 1) 提出需求:
 	根据id查询对应的用户记录对象
 
 2). 准备数据库表和数据
+
 	CREATE TABLE c_user(
 		id INT PRIMARY KEY AUTO_INCREMENT, 
 		NAME VARCHAR(20), 
@@ -587,6 +613,7 @@ MyBatis中可用的动态SQL标签
 	INSERT INTO c_user(NAME, age) VALUES('Jack', 11);
 
 3). 创建表的实体类
+
 	public class User implements Serializable{
 	
 		private int id;
@@ -595,6 +622,7 @@ MyBatis中可用的动态SQL标签
 	}
 
 4). userMapper.xml
+
 	<?xml version="1.0" encoding="UTF-8" ?>
 	<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 	<mapper namespace="com.atguigu.mybatis.test8.userMapper">
@@ -611,9 +639,9 @@ MyBatis中可用的动态SQL标签
 
 5). 测试:
 
-/*
- * 一级缓存: 也就Session级的缓存(默认开启)
- */
+	/*
+	 * 一级缓存: 也就Session级的缓存(默认开启)
+	 */
 	@Test
 	public void testCache1() {
 		SqlSession session = MybatisUtils.getSession();
@@ -667,11 +695,14 @@ MyBatis中可用的动态SQL标签
 	}
 
 #### 9.3. Mybatis二级缓存 ####
+
 1). 添加一个<cache>在userMapper.xml中
+
 	<mapper namespace="com.atguigu.mybatis.test8.userMapper">
 		<cache/>
 
 2). 测试
+
 	/*
 	 * 测试二级缓存
 	 */
@@ -691,27 +722,31 @@ MyBatis中可用的动态SQL标签
 	}
 
 3). 补充说明
+
 1. 映射语句文件中的所有select语句将会被缓存。 
 2. 映射语句文件中的所有insert，update和delete语句会刷新缓存。 
 3. 缓存会使用Least Recently Used（LRU，最近最少使用的）算法来收回。 
 4. 缓存会根据指定的时间间隔来刷新。 
 5. 缓存会存储1024个对象
 
-	<cache 
-	eviction="FIFO"  //回收策略为先进先出
-	flushInterval="60000" //自动刷新时间60s
-	size="512" //最多缓存512个引用对象
-	readOnly="true"/> //只读
+
+		<cache 
+		eviction="FIFO"  //回收策略为先进先出
+		flushInterval="60000" //自动刷新时间60s
+		size="512" //最多缓存512个引用对象
+		readOnly="true"/> //只读
 
 ### 10. spring集成mybatis ###
 
 #### 10.1. 添加Jar包 ####
 【mybatis】
+
 		mybatis-3.2.0.jar
 		mybatis-spring-1.1.1.jar
 		log4j-1.2.17.jar
 
 【spring】
+
 		spring-aop-3.2.0.RELEASE.jar
 		spring-beans-3.2.0.RELEASE.jar
 		spring-context-3.2.0.RELEASE.jar
@@ -726,6 +761,7 @@ MyBatis中可用的动态SQL标签
 		commons-logging-1.1.1.jar
 
 【MYSQL驱动包】
+
 		mysql-connector-java-5.0.4-bin.jar
 
 #### 10.2. 数据库表 ####
