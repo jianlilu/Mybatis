@@ -1,5 +1,7 @@
 package com.lu.pojo;
 
+/*     准备实体类Category，用于映射表category_   */
+
 public class Category {
 
 	private int id;
