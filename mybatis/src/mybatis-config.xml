@@ -15,6 +15,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
 <configuration>
     <typeAliases>
       <package name="com.lu.pojo"/>
+      <package name="com.luu.pojo"/>
     </typeAliases>
     <environments default="development">
         <environment id="development">
@@ -31,7 +32,7 @@ PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
     <!-- 映射Category.xml 和  Student.xml -->
     <mappers>
         <mapper resource="com/lu/pojo/Category.xml"/>
-        <mapper resource="com/lu/pojo/Student.xml"/>
+        <mapper resource="com/luu/pojo/Student.xml"/>
     </mappers>
    
 </configuration>

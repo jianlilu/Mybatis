@@ -10,7 +10,7 @@ import org.apache.ibatis.session.SqlSessionFactory;
 import org.apache.ibatis.session.SqlSessionFactoryBuilder;
 
 import com.lu.pojo.Category;
-import com.lu.pojo.Student;
+import com.luu.pojo.Student;
 
 public class TestMybatis {
 	 
