@@ -8,7 +8,7 @@
 里面定义了一条sql语句,
 这条sql语句用id: listCategory 进行标示以供后续代码调用。
 resultType="Category" 表示返回的数据和Category关联起来，
-这里本应该使用的是 com.how2java.pojo.Category, 但是因为上一步配置了别名，所以直接使用Category就行了
+这里本应该使用的是 com.lu.pojo.Category, 但是因为上一步配置了别名，所以直接使用Category就行了
  -->
  
  
