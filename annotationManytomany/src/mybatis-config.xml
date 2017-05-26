@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-config.dtd">
+
+<!-- 
+
+在src目录下创建mybatis的主配置文件mybatis-config.xml (相当于hibernate.cfg.xml)。
+其作用主要是提供连接数据库用的驱动，数据库名称，编码方式，账号密码
+以及别名，自动扫描com.lu.pojo下的类型，使得在后续配置文件Category.xml中使用resultType的时候，
+可以直接使用Category,而不比写全com.lu.pojo.Category
+
+ -->
+
+<configuration>
+    <typeAliases>
+      <package name="com.lu.pojo"/>
+    
+    </typeAliases>
+    <environments default="development">
+        <environment id="development">
+            <transactionManager type="JDBC"/>
+            <dataSource type="POOLED">
+                <property name="driver" value="com.mysql.jdbc.Driver"/>
+                <property name="url" value="jdbc:mysql://localhost:3306/how2java?characterEncoding=UTF-8"/>
+                <property name="username" value="root"/>
+                <property name="password" value="123456"/>
+            </dataSource>
+        </environment>
+    </environments>
+    
+    <!-- 映射Category.xml  -->
+    <mappers>
+		<mapper resource="com/lu/pojo/Category.xml"/>
+		<mapper resource="com/lu/pojo/Order.xml"/>
+		<mapper resource="com/lu/pojo/OrderItem.xml"/>
+		<mapper resource="com/lu/pojo/Product.xml"/>
+		
+        <mapper class="com.lu.mapper.CategoryMapper"/>        
+        <mapper class="com.lu.mapper.ProductMapper"/>        
+        <mapper class="com.lu.mapper.OrderItemMapper"/>        
+        <mapper class="com.lu.mapper.OrderMapper"/>        
+    </mappers>
+   
+</configuration>
